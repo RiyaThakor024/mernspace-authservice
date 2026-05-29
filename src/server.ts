@@ -1,5 +1,4 @@
 function Welcome(name: string){
-    console.log("welcome in :", +name);
-    
+ console.log('welcome in :', +name);
 }
-Welcome("india");
+Welcome('india');
