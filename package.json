@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev":" node src/server.js",
+    "dev": " node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/RiyaThakor024/mernspace-authservice/issues"
   },
-  "homepage": "https://github.com/RiyaThakor024/mernspace-authservice#readme"
+  "homepage": "https://github.com/RiyaThakor024/mernspace-authservice#readme",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3"
+  }
 }
