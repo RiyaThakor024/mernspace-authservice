@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/server.js",
     "format:fix": "prettier . --write",
     "format:check": "prettier . --check",
-    "dev": " node src/server.js",
+    "dev": " node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:check": "eslint .",
     "lint": "eslint . --fix",
@@ -32,11 +35,13 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.0"
   },
-  
   "lint-staged": {
-    "*.ts": 
-    ["npm run format:fix",
-     "npm run lint:fix"]
+    "*.ts": [
+      "npm run format:fix",
+      "npm run lint"
+    ]
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
-
 }
