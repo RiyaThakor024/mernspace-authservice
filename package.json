@@ -1,47 +1,47 @@
 {
-  "name": "auth-service",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/server.js",
-    "format:fix": "prettier . --write",
-    "format:check": "prettier . --check",
-    "dev": " node src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint:check": "eslint .",
-    "lint": "eslint . --fix",
-    "prepare": "husky"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RiyaThakor024/mernspace-authservice.git"
-  },
-  "author": "riya thakor",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/RiyaThakor024/mernspace-authservice/issues"
-  },
-  "homepage": "https://github.com/RiyaThakor024/mernspace-authservice#readme",
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^25.9.1",
-    "eslint": "^10.4.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^17.0.7",
-    "prettier": "3.8.3",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.60.0"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "npm run format:fix",
-      "npm run lint"
-    ]
-  },
-  "dependencies": {
-    "dotenv": "^17.4.2"
-  }
+    "name": "auth-service",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "build": "npx tsc",
+        "start": "node dist/server.js",
+        "format:fix": "prettier . --write",
+        "format:check": "prettier . --check",
+        "dev": " node src/server.ts",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint:check": "eslint .",
+        "lint": "eslint . --fix",
+        "prepare": "husky"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/RiyaThakor024/mernspace-authservice.git"
+    },
+    "author": "riya thakor",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/RiyaThakor024/mernspace-authservice/issues"
+    },
+    "homepage": "https://github.com/RiyaThakor024/mernspace-authservice#readme",
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@types/node": "^25.9.1",
+        "eslint": "^10.4.0",
+        "husky": "^9.1.7",
+        "lint-staged": "^17.0.7",
+        "prettier": "3.8.3",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.60.0"
+    },
+    "lint-staged": {
+        "*.ts": [
+            "npm run format:fix",
+            "npm run lint"
+        ]
+    },
+    "dependencies": {
+        "dotenv": "^17.4.2"
+    }
 }
