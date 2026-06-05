@@ -4,7 +4,17 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
     {
-        ignores: ['dist/**', 'node_modules/**', 'eslint.config.mjs', '*.spec.ts', 'tests/', '.github', '*.js', 'jest.config.js','coverage/**'],
+        ignores: [
+            'dist/**',
+            'node_modules/**',
+            'eslint.config.mjs',
+            '*.spec.ts',
+            'tests/',
+            '.github',
+            '*.js',
+            'jest.config.js',
+            'coverage/**',
+        ],
     },
 
     js.configs.recommended,
@@ -21,7 +31,7 @@ export default defineConfig([
         rules: {
             // "no-console": "off",
             'dot-notation': 'error',
-            '@typescript-eslint/no-misused-promises':'off',
+            '@typescript-eslint/no-misused-promises': 'off',
         },
     },
 ]);
