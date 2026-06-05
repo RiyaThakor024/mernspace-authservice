@@ -3,9 +3,9 @@ import express, {
     type Response,
     type NextFunction,
 } from 'express';
-import { logger } from './config/logger.js';
-import type { HttpError } from 'http-errors';
+import { logger } from './config/logger';
 import createHttpError from 'http-errors';
+import type { HttpError } from 'http-errors';
 
 const app = express();
 

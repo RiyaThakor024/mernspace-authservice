@@ -1,5 +1,5 @@
-import { Config } from './config/index.js';
-import app from './app.js';
+import { Config } from './config/index';
+import app from './app';
 
 const startServer = () => {
     const PORT = Config.PORT;
