@@ -11,7 +11,7 @@
         "format:check": "prettier . --check",
         "test": "jest --watch --runInBand",
         "lint:check": "eslint .",
-        "dev": "nodemon --watch src --exec \"ts-node --esm src/server.ts\"",
+        "dev": "nodemon -L --watch src --ext ts --exec ts-node src/server.ts",
         "lint": "eslint . --fix",
         "prepare": "husky"
     },

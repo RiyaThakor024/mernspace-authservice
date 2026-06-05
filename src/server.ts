@@ -1,3 +1,4 @@
+console.log('SERVER FILE LOADED');
 import { Config } from './config/index';
 import app from './app';
 
