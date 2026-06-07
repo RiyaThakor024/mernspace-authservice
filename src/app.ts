@@ -6,7 +6,7 @@ import express, {
 import { logger } from './config/logger';
 import createHttpError from 'http-errors';
 import type { HttpError } from 'http-errors';
-
+import authRouter from './routes/auth';
 const app = express();
 
 app.get('/', (req, res) => {
@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
     throw err;
     res.send('welcome to auth service');
 });
+app.use('/auth', authRouter);
 // global error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
