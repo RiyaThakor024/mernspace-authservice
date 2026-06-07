@@ -1,7 +1,26 @@
 /// <reference types="jest" />
 import request from 'supertest';
-import app from '../src/app';
+import app from '../../src/app';
+import { DataSource } from 'typeorm';
+import { AppDataSource } from '../../src/config/data-source';
+import { truncateTables } from '../utils';
+import { User } from '../../src/entities/User';
 describe('POST /auth/register', () => {
+    let connection: DataSource;
+
+    beforeAll(async () => {
+        connection = await AppDataSource.initialize();
+    });
+
+    beforeEach(async () => {
+        //truncate
+        await truncateTables(connection);
+    });
+
+    afterAll(async () => {
+        await connection.destroy();
+    });
+
     describe('given all field', () => {
         it('should return 201 statusvode', async () => {
             //Arrange
@@ -50,6 +69,12 @@ describe('POST /auth/register', () => {
                 .send(userData);
 
             //Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(1);
+            expect(users[0].firstname).toBe(userData.firstname);
+            expect(users[0].lastname).toBe(userData.lastname);
+            expect(users[0].email).toBe(userData.email);
         });
     });
 });
