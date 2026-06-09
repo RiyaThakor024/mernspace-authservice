@@ -2,7 +2,7 @@ import createHttpError from 'http-errors';
 import { User } from '../entities/User';
 import { UserData } from '../types';
 import { Repository } from 'typeorm';
-
+import { Roles } from '../constants/index';
 export class UserService {
     constructor(private userRepository: Repository<User>) {}
     async create({ firstname, lastname, email, password }: UserData) {
@@ -12,6 +12,7 @@ export class UserService {
                 lastname,
                 email,
                 password,
+                role: Roles.CUSTOMER,
             });
             return user;
         } catch {
