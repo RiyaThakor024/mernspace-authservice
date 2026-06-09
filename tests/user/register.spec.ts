@@ -9,7 +9,12 @@ describe('POST /auth/register', () => {
     let connection: DataSource;
 
     beforeAll(async () => {
-        connection = await AppDataSource.initialize();
+        try {
+            connection = await AppDataSource.initialize();
+            console.log('Database connected');
+        } catch (error) {
+            console.error(error);
+        }
     });
 
     beforeEach(async () => {
@@ -18,7 +23,9 @@ describe('POST /auth/register', () => {
     });
 
     afterAll(async () => {
-        await connection.destroy();
+        if (connection && connection.isInitialized) {
+            await connection.destroy();
+        }
     });
 
     describe('given all field', () => {
@@ -75,6 +82,21 @@ describe('POST /auth/register', () => {
             expect(users[0].firstname).toBe(userData.firstname);
             expect(users[0].lastname).toBe(userData.lastname);
             expect(users[0].email).toBe(userData.email);
+        });
+        it('should return an id of the created user', async () => {
+            const userData = {
+                firstname: 'Riya',
+                lastname: 'Thakor',
+                email: 'riya024@gmail.com',
+                password: 'secret',
+            };
+            //Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            //Assert
+            expect(response.body.id).toBeDefined();
         });
     });
 });
