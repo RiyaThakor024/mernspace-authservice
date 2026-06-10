@@ -2,6 +2,9 @@ import { NextFunction, Response } from 'express';
 import { RegisterUserRequest } from '../types';
 import { UserService } from '../services/UserService';
 import { Logger } from 'pino';
+// import createHttpError from 'http-errors';
+import { validationResult } from 'express-validator';
+// import { error } from 'node:console';
 export class AuthController {
     constructor(
         private userService: UserService,
@@ -12,6 +15,11 @@ export class AuthController {
         res: Response,
         next: NextFunction,
     ) {
+        //validation
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).json({ error: result.array() });
+        }
         const { firstname, lastname, email, password } = req.body;
         this.logger.debug(
             {
