@@ -9,8 +9,8 @@ import { validationResult } from 'express-validator';
 import { JwtPayload } from 'jsonwebtoken';
 // import createHttpError from 'http-errors';
 // import { Config } from '../config';
-import { AppDataSource } from '../config/data-source';
-import { RefreshToken } from '../entities/RefreshToken';
+// import { AppDataSource } from '../config/data-source';
+// import { RefreshToken } from '../entities/RefreshToken';
 import { TokenService } from '../services/TokenService';
 // import { error } from 'node:console';
 export class AuthController {
@@ -68,13 +68,15 @@ export class AuthController {
             // });
             const accessToken = this.tokenService.generateAccessToken(payload);
             //persist the refresh token
-            const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
-            const refreshTokenRepository =
-                AppDataSource.getRepository(RefreshToken);
-            const newRefreshToken = await refreshTokenRepository.save({
-                user: saveUser,
-                expiresAt: new Date(Date.now() + MS_IN_YEAR),
-            });
+            // const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
+            // const refreshTokenRepository =
+            //     AppDataSource.getRepository(RefreshToken);
+            // const newRefreshToken = await refreshTokenRepository.save({
+            //     user: saveUser,
+            //     expiresAt: new Date(Date.now() + MS_IN_YEAR),
+            // });
+            const newRefreshToken =
+                await this.tokenService.persistRefreshToken(saveUser);
             const refreshToken = this.tokenService.generateRefreshToken({
                 ...payload,
                 id: String(newRefreshToken.id),
