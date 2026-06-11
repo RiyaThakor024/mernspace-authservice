@@ -14,6 +14,7 @@ export default defineConfig([
             '*.js',
             'jest.config.js',
             'coverage/**',
+            'scripts/**.mjs',
         ],
     },
 
