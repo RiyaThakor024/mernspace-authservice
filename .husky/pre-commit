@@ -1,1 +1,7 @@
-npx lint-staged
+if command -v npm >/dev/null 2>&1; then
+	npm run -s lint-staged
+elif command -v npx >/dev/null 2>&1; then
+	npx lint-staged
+else
+	echo "npm/npx not found in PATH — skipping lint-staged hook"
+fi

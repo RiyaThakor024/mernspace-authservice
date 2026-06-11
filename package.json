@@ -14,6 +14,7 @@
         "dev": " cross-env NODE_ENV=dev nodemon -L --watch src --ext ts --exec ts-node src/server.ts",
         "lint": "eslint . --fix",
         "prepare": "husky",
+        "lint-staged": "lint-staged",
         "typeorm": "typeorm-ts-node-commonjs"
     },
     "repository": {
