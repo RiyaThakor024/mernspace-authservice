@@ -359,7 +359,7 @@ describe('POST /auth/register', () => {
                 .send(userData);
             //Assert
             expect(response.statusCode).toBe(400);
-            expect(Array.isArray(response.body.error)).toBe(true);
+            expect(Array.isArray(response.body.errors)).toBe(true);
             const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
         });

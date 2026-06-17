@@ -1,7 +1,7 @@
 // import fs from 'fs';
 // import path from 'path';
 import { NextFunction, Response } from 'express';
-import { RegisterUserRequest } from '../types';
+import { AuthRequest, RegisterUserRequest } from '../types';
 import { UserService } from '../services/UserService';
 import { Logger } from 'pino';
 // import createHttpError from 'http-errors';
@@ -12,12 +12,15 @@ import { JwtPayload } from 'jsonwebtoken';
 // import { AppDataSource } from '../config/data-source';
 // import { RefreshToken } from '../entities/RefreshToken';
 import { TokenService } from '../services/TokenService';
+import createHttpError from 'http-errors';
+import { CredentialService } from '../services/CredentialService';
 // import { error } from 'node:console';
 export class AuthController {
     constructor(
         private userService: UserService,
         private logger: Logger,
         private tokenService: TokenService,
+        private credentialService: CredentialService,
     ) {}
     async register(
         req: RegisterUserRequest,
@@ -27,7 +30,7 @@ export class AuthController {
         //validation
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            return res.status(400).json({ error: result.array() });
+            return res.status(400).json({ errors: result.array() });
         }
         const { firstname, lastname, email, password } = req.body;
         this.logger.debug(
@@ -107,5 +110,83 @@ export class AuthController {
             next(error);
             return;
         }
+    }
+    async login(req: RegisterUserRequest, res: Response, next: NextFunction) {
+        //validation
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).json({ errors: result.array() });
+        }
+        const { email, password } = req.body;
+        this.logger.debug(
+            {
+                email,
+                password: '******',
+            },
+            'new request to login a user',
+        );
+        try {
+            const user = await this.userService.findByEmail(email);
+            if (!user) {
+                const error = createHttpError(
+                    400,
+                    'Email or password does not match',
+                );
+                next(error);
+                return;
+            }
+            const passwordMatch = await this.credentialService.comparePassword(
+                password,
+                user.password,
+            );
+            if (!passwordMatch) {
+                const error = createHttpError(
+                    400,
+                    'Email or password does not match',
+                );
+                next(error);
+                return;
+            }
+            // this.logger.info({ id: saveUser.id }, 'user has been registered');
+
+            const payload: JwtPayload = {
+                sub: String(user.id),
+                role: user.role,
+            };
+            const accessToken = this.tokenService.generateAccessToken(payload);
+
+            //persist the refresh token
+            const newRefreshToken =
+                await this.tokenService.persistRefreshToken(user);
+
+            const refreshToken = this.tokenService.generateRefreshToken({
+                ...payload,
+                id: String(newRefreshToken.id),
+            });
+            res.cookie('accessToken', accessToken, {
+                domain: 'localhost',
+                sameSite: 'strict',
+                maxAge: 1000 * 60 * 60, //1h
+                httpOnly: true, //very imp
+            });
+            res.cookie('refreshToken', refreshToken, {
+                domain: 'localhost',
+                sameSite: 'strict',
+                maxAge: 1000 * 60 * 60 * 24 * 365,
+                httpOnly: true,
+            });
+            return res.status(200).json({
+                id: user.id,
+            });
+        } catch (error) {
+            next(error);
+            return;
+        }
+    }
+    async self(req: AuthRequest, res: Response) {
+        //token req.auth.sub
+        const user = await this.userService.findById(Number(req.auth.sub));
+
+        return res.status(200).json({ user });
     }
 }

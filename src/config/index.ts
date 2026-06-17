@@ -16,4 +16,5 @@ export const Config = {
     DB_PASSWORD: process.env.DB_PASSWORD!,
     DB_NAME: process.env.DB_NAME!,
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET!,
+    JWKS_URI: process.env.JWKS_URI!,
 };

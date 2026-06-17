@@ -39,6 +39,7 @@ export class TokenService {
         const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
         const newRefreshToken = await this.refreshTokenRepository.save({
             user: user,
+            userId: user.id,
             expiresAt: new Date(Date.now() + MS_IN_YEAR),
         });
         return newRefreshToken;

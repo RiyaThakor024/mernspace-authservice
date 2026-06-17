@@ -16,6 +16,9 @@ export class RefreshToken {
     @Column({ type: 'timestamp' })
     expiresAt: Date;
 
+    @Column()
+    userId: number;
+
     @ManyToOne(() => User)
     user: User;
 
