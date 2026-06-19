@@ -9,7 +9,7 @@
         "start": "ts-node src/index.ts",
         "format:fix": "prettier . --write",
         "format:check": "prettier . --check",
-        "test": "jest --watch --runInBand",
+        "test": "jest --watchAll --runInBand",
         "lint:check": "eslint .",
         "dev": " cross-env NODE_ENV=dev nodemon -L --watch src --ext ts --exec ts-node src/server.ts",
         "lint": "eslint . --fix",

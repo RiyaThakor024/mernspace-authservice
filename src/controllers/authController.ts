@@ -135,6 +135,9 @@ export class AuthController {
                 next(error);
                 return;
             }
+            console.log('password:', password);
+            console.log('user:', user);
+            console.log('user.password:', user?.password);
             const passwordMatch = await this.credentialService.comparePassword(
                 password,
                 user.password,
@@ -186,7 +189,11 @@ export class AuthController {
     async self(req: AuthRequest, res: Response) {
         //token req.auth.sub
         const user = await this.userService.findById(Number(req.auth.sub));
-
-        return res.status(200).json({ user });
+        if (!user) {
+            throw createHttpError(404, 'User not found');
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...userWithoutPassword } = user;
+        return res.status(200).json(userWithoutPassword);
     }
 }

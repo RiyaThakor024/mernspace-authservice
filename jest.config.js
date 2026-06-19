@@ -6,6 +6,8 @@ const tsJestTransformCfg = createDefaultPreset().transform;
 const config = {
     testEnvironment: 'node',
     transform: { ...tsJestTransformCfg },
+    // ensure all spec files under tests/ are discovered
+    testMatch: ['<rootDir>/tests/**/*.spec.ts'],
     verbose: true,
     collectCoverage: true,
     coverageProvider: 'v8',

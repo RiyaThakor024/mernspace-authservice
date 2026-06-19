@@ -45,9 +45,23 @@ describe('GET/auth/self', () => {
             expect(response.statusCode).toBe(401);
         });
         it('should return 200 status code', async () => {
-            const accessToken = jwks.token({
-                sub: '1',
+            const userData = {
+                firstname: 'Riya',
+                lastname: 'Thakor',
+                email: 'riya024@gmail.com',
+                password: 'secret123',
+            };
+            const userRepository = connection.getRepository(User);
+            const data = await userRepository.save({
+                ...userData,
                 role: Roles.CUSTOMER,
+            });
+
+            //genrate token
+
+            const accessToken = jwks.token({
+                sub: String(data.id),
+                role: data.role,
             });
             const response = await request(app)
                 .get('/auth/self')
@@ -84,7 +98,39 @@ describe('GET/auth/self', () => {
 
             //Assert
             //check if user id matches  with registered user
-            expect(response.body.user.id).toBe(data.id);
+            expect(response.body.id).toBe(data.id);
+        });
+        it('should not return the password field', async () => {
+            //Register user
+            const userData = {
+                firstname: 'Riya',
+                lastname: 'Thakor',
+                email: 'riya024@gmail.com',
+                password: 'secret123',
+            };
+            const userRepository = connection.getRepository(User);
+            const data = await userRepository.save({
+                ...userData,
+                role: Roles.CUSTOMER,
+            });
+
+            //genrate token
+            const accessToken = jwks.token({
+                sub: String(data.id),
+                role: data.role,
+            });
+
+            //Add token to cookie
+            const response = await request(app)
+                .get('/auth/self')
+                .set('Cookie', [`accessToken=${accessToken};`])
+                .send();
+
+            //Assert
+            //check if user id matches  with registered user
+            console.log(response.body);
+            expect(response.body.id).toBe(data.id);
+            expect(response.body).not.toHaveProperty('password');
         });
     });
 });
