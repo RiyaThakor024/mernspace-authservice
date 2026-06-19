@@ -10,9 +10,11 @@ import createHttpError from 'http-errors';
 import type { HttpError } from 'http-errors';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth';
+import jwksRouter from './routes/jwks';
 const app = express();
 app.use(express.json());
-
+app.use(express.static('public'));
+app.use('/.well-known', jwksRouter);
 app.get('/', (req, res) => {
     const err = createHttpError(401, 'you can not access this route.');
     throw err;
