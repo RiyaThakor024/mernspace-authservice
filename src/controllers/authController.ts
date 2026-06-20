@@ -6,7 +6,6 @@ import { UserService } from '../services/UserService';
 import { Logger } from 'pino';
 // import createHttpError from 'http-errors';
 import { validationResult } from 'express-validator';
-import { JwtPayload } from 'jsonwebtoken';
 // import createHttpError from 'http-errors';
 // import { Config } from '../config';
 // import { AppDataSource } from '../config/data-source';
@@ -14,6 +13,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { TokenService } from '../services/TokenService';
 import createHttpError from 'http-errors';
 import { CredentialService } from '../services/CredentialService';
+import { AuthTokenService } from '../services/AuthTokenService';
 // import { error } from 'node:console';
 export class AuthController {
     constructor(
@@ -21,6 +21,7 @@ export class AuthController {
         private logger: Logger,
         private tokenService: TokenService,
         private credentialService: CredentialService,
+        private authTokenService: AuthTokenService,
     ) {}
     async register(
         req: RegisterUserRequest,
@@ -50,7 +51,7 @@ export class AuthController {
                 password,
             });
             this.logger.info({ id: saveUser.id }, 'user has been registered');
-
+            await this.authTokenService.generateAndSetToken(saveUser, res);
             // let privateKey: Buffer;
             // try {
             // privateKey = fs.readFileSync(path.join(__dirname,'../../certs/private.pem'));
@@ -60,16 +61,11 @@ export class AuthController {
             //    next(err);
             //    return;
             // }
-            const payload: JwtPayload = {
-                sub: String(saveUser.id),
-                role: saveUser.role,
-            };
             // const accessToken = sign(payload,privateKey,{
             //     algorithm:'RS256',
             //     expiresIn:'1h',
             //     issuer:'auth-service',
             // });
-            const accessToken = this.tokenService.generateAccessToken(payload);
             //persist the refresh token
             // const MS_IN_YEAR = 1000 * 60 * 60 * 24 * 365;
             // const refreshTokenRepository =
@@ -78,12 +74,6 @@ export class AuthController {
             //     user: saveUser,
             //     expiresAt: new Date(Date.now() + MS_IN_YEAR),
             // });
-            const newRefreshToken =
-                await this.tokenService.persistRefreshToken(saveUser);
-            const refreshToken = this.tokenService.generateRefreshToken({
-                ...payload,
-                id: String(newRefreshToken.id),
-            });
             // const refreshToken = sign(payload,Config.REFRESH_TOKEN_SECRET,{
             //     algorithm:'HS256',
             //     expiresIn:'1y',
@@ -91,18 +81,6 @@ export class AuthController {
             //     jwtid:String(newRefreshToken.id),
             // });
 
-            res.cookie('accessToken', accessToken, {
-                domain: 'localhost',
-                sameSite: 'strict',
-                maxAge: 1000 * 60 * 60, //1h
-                httpOnly: true, //very imp
-            });
-            res.cookie('refreshToken', refreshToken, {
-                domain: 'localhost',
-                sameSite: 'strict',
-                maxAge: 1000 * 60 * 60 * 24 * 365,
-                httpOnly: true,
-            });
             return res.status(201).json({
                 id: saveUser.id,
             });
@@ -151,33 +129,7 @@ export class AuthController {
                 return;
             }
             // this.logger.info({ id: saveUser.id }, 'user has been registered');
-
-            const payload: JwtPayload = {
-                sub: String(user.id),
-                role: user.role,
-            };
-            const accessToken = this.tokenService.generateAccessToken(payload);
-
-            //persist the refresh token
-            const newRefreshToken =
-                await this.tokenService.persistRefreshToken(user);
-
-            const refreshToken = this.tokenService.generateRefreshToken({
-                ...payload,
-                id: String(newRefreshToken.id),
-            });
-            res.cookie('accessToken', accessToken, {
-                domain: 'localhost',
-                sameSite: 'strict',
-                maxAge: 1000 * 60 * 60, //1h
-                httpOnly: true, //very imp
-            });
-            res.cookie('refreshToken', refreshToken, {
-                domain: 'localhost',
-                sameSite: 'strict',
-                maxAge: 1000 * 60 * 60 * 24 * 365,
-                httpOnly: true,
-            });
+            await this.authTokenService.generateAndSetToken(user, res);
             return res.status(200).json({
                 id: user.id,
             });
@@ -186,6 +138,7 @@ export class AuthController {
             return;
         }
     }
+
     async self(req: AuthRequest, res: Response) {
         //token req.auth.sub
         const user = await this.userService.findById(Number(req.auth.sub));
@@ -195,5 +148,29 @@ export class AuthController {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...userWithoutPassword } = user;
         return res.status(200).json(userWithoutPassword);
+    }
+
+    async refresh(req: AuthRequest, res: Response, next: NextFunction) {
+        console.log('REFRESH API HIT');
+        console.log('AUTH:', req.auth);
+        const user = await this.userService.findById(Number(req.auth.sub));
+        if (!user) {
+            const error = createHttpError(
+                400,
+                'user with tokem could not find',
+            );
+            next(error);
+            return;
+        }
+
+        try {
+            await this.authTokenService.generateAndSetToken(user, res);
+            return res.status(200).json({
+                id: user.id,
+            });
+        } catch (error) {
+            next(error);
+            return;
+        }
     }
 }

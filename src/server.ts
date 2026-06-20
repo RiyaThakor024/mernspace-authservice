@@ -6,7 +6,8 @@ import { logger } from './config/logger';
 
 const startServer = async () => {
     const PORT = Config.PORT;
-
+    console.log('Database Config:');
+    console.log(AppDataSource.options);
     try {
         await AppDataSource.initialize();
         logger.info('database conected successfuly');

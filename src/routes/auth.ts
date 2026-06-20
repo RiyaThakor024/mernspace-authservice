@@ -11,17 +11,21 @@ import loginValidator from '../validator/login-validator';
 import { CredentialService } from '../services/CredentialService';
 import { authenticate } from '../middlewares/authenticates';
 import { AuthRequest } from '../types';
+import validateRefreshToken from '../middlewares/validateRefreshToken';
+import { AuthTokenService } from '../services/AuthTokenService';
 const router = express.Router();
 const userRepository = AppDataSource.getRepository(User);
 const userService = new UserService(userRepository);
 const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
 const tokenService = new TokenService(refreshTokenRepository);
 const credentialService = new CredentialService();
+const authTokenService = new AuthTokenService(tokenService);
 const authController = new AuthController(
     userService,
     logger,
     tokenService,
     credentialService,
+    authTokenService,
 );
 router.post(
     '/register',
@@ -37,6 +41,13 @@ router.post(
 );
 router.get('/self', authenticate, (req: Request, res: Response) =>
     authController.self(req as AuthRequest, res),
+);
+
+router.post(
+    '/refresh',
+    validateRefreshToken,
+    (req: Request, res: Response, next: NextFunction) =>
+        authController.refresh(req as AuthRequest, res, next),
 );
 
 export default router;

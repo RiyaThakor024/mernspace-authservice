@@ -6,6 +6,7 @@ import { Config } from '../config';
 import { User } from '../entities/User';
 import { RefreshToken } from '../entities/RefreshToken';
 import { Repository } from 'typeorm';
+// import { log } from 'console';
 
 export class TokenService {
     constructor(private refreshTokenRepository: Repository<RefreshToken>) {}
@@ -42,6 +43,13 @@ export class TokenService {
             userId: user.id,
             expiresAt: new Date(Date.now() + MS_IN_YEAR),
         });
+        console.log('saved token:', newRefreshToken);
+
         return newRefreshToken;
+    }
+
+    //delete older refresh token
+    async deleteRefreshToken(tokenId: number) {
+        return await this.refreshTokenRepository.delete({ id: tokenId });
     }
 }
