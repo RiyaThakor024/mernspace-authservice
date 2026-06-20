@@ -164,10 +164,28 @@ export class AuthController {
         }
 
         try {
+            const oldRefreshTokenId = Number(req.auth.id);
+            await this.tokenService.deleteRefreshToken(oldRefreshTokenId);
             await this.authTokenService.generateAndSetToken(user, res);
             return res.status(200).json({
                 id: user.id,
             });
+        } catch (error) {
+            next(error);
+            return;
+        }
+    }
+    async logout(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            await this.tokenService.deleteRefreshToken(Number(req.auth.id));
+            this.logger.info(
+                { id: req.auth.id },
+                'Refresh token has been deleted',
+            );
+            this.logger.info({ id: req.auth.sub }, 'user has been logged out');
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            res.json({});
         } catch (error) {
             next(error);
             return;

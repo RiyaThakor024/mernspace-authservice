@@ -7,6 +7,7 @@ import request, { cookies } from 'supertest';
 import { cookie } from 'express-validator';
 import { isJwt } from '../utils';
 import { accessSync } from 'node:fs';
+import jwks from '../../public/.well-known/jwks.json';
 
 describe('POST/auth/login', () => {
     let connection: DataSource;
