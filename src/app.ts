@@ -10,6 +10,7 @@ import createHttpError from 'http-errors';
 import type { HttpError } from 'http-errors';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth';
+import tenantRouter from './routes/tenants';
 import jwksRouter from './routes/jwks';
 const app = express();
 app.use(express.json());
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 });
 app.use(cookieParser());
 app.use('/auth', authRouter);
+app.use('/tenant', tenantRouter);
 // global error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
