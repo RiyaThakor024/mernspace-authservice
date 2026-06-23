@@ -26,3 +26,11 @@ export interface IRefreshTokenPayload {
     sub?: string;
     role?: number;
 }
+export interface ITenant {
+    name: string;
+    address: string;
+}
+
+export interface CreateTenantRequest extends Request {
+    body: ITenant;
+}
