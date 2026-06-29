@@ -34,3 +34,10 @@ export interface ITenant {
 export interface CreateTenantRequest extends Request {
     body: ITenant;
 }
+export interface TenantRequest {
+    tenant: {
+        id: string;
+        name: string;
+        address: string;
+    };
+}
