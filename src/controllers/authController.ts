@@ -14,6 +14,7 @@ import { TokenService } from '../services/TokenService';
 import createHttpError from 'http-errors';
 import { CredentialService } from '../services/CredentialService';
 import { AuthTokenService } from '../services/AuthTokenService';
+import { Roles } from '../constants';
 // import { error } from 'node:console';
 export class AuthController {
     constructor(
@@ -49,6 +50,7 @@ export class AuthController {
                 lastname,
                 email,
                 password,
+                role: Roles.CUSTOMER,
             });
             this.logger.info({ id: saveUser.id }, 'user has been registered');
             await this.authTokenService.generateAndSetToken(saveUser, res);
