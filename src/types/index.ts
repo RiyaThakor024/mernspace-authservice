@@ -1,10 +1,13 @@
 import { Request } from 'express';
+import { Repository } from 'typeorm';
+import { Tenant } from '../entities/tenents';
 export interface UserData {
     firstname: string;
     lastname: string;
     email: string;
     password: string;
     role: string;
+    tenantId?: number;
 }
 export interface RegisterUserRequest extends Request {
     body: UserData;
@@ -45,3 +48,19 @@ export interface TenantRequest {
 export interface CreateUserRequest extends Request {
     body: UserData;
 }
+
+export interface UserRequest {
+    user: {
+        id: string;
+        firstname: string;
+        lastname: string;
+    };
+}
+
+export const createTenant = async (repository: Repository<Tenant>) => {
+    const tenant = await repository.save({
+        name: 'Test Tenant',
+        address: 'Test Address',
+    });
+    return tenant;
+};

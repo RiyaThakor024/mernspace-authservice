@@ -15,40 +15,41 @@ import validateRefreshToken from '../middlewares/validateRefreshToken';
 import { AuthTokenService } from '../services/AuthTokenService';
 import parseRefreshToken from '../middlewares/parseRefreshToken';
 const router = express.Router();
-const userRepository = AppDataSource.getRepository(User);
-const userService = new UserService(userRepository);
-const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
-const tokenService = new TokenService(refreshTokenRepository);
-const credentialService = new CredentialService();
-const authTokenService = new AuthTokenService(tokenService);
-const authController = new AuthController(
-    userService,
-    logger,
-    tokenService,
-    credentialService,
-    authTokenService,
-);
+const createAuthController = () => {
+    const userService = new UserService(AppDataSource.getRepository(User));
+    const refreshTokenRepository = AppDataSource.getRepository(RefreshToken);
+    const tokenService = new TokenService(refreshTokenRepository);
+    const credentialService = new CredentialService();
+    const authTokenService = new AuthTokenService(tokenService);
+    return new AuthController(
+        userService,
+        logger,
+        tokenService,
+        credentialService,
+        authTokenService,
+    );
+};
 router.post(
     '/register',
     registerValidator,
     (req: Request, res: Response, next: NextFunction) =>
-        authController.register(req, res, next),
+        createAuthController().register(req, res, next),
 );
 router.post(
     '/login',
     loginValidator,
     (req: Request, res: Response, next: NextFunction) =>
-        authController.login(req, res, next),
+        createAuthController().login(req, res, next),
 );
 router.get('/self', authenticate, (req: Request, res: Response) =>
-    authController.self(req as AuthRequest, res),
+    createAuthController().self(req as AuthRequest, res),
 );
 
 router.post(
     '/refresh',
     validateRefreshToken,
     (req: Request, res: Response, next: NextFunction) =>
-        authController.refresh(req as AuthRequest, res, next),
+        createAuthController().refresh(req as AuthRequest, res, next),
 );
 
 router.post(
@@ -56,7 +57,7 @@ router.post(
     authenticate,
     parseRefreshToken,
     (req: Request, res: Response, next: NextFunction) =>
-        authController.logout(req as AuthRequest, res, next),
+        createAuthController().logout(req as AuthRequest, res, next),
 );
 
 export default router;

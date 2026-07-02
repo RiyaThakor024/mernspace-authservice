@@ -6,7 +6,14 @@ import { Roles } from '../constants/index';
 import bcrypt from 'bcrypt';
 export class UserService {
     constructor(private userRepository: Repository<User>) {}
-    async create({ firstname, lastname, email, password, role }: UserData) {
+    async create({
+        firstname,
+        lastname,
+        email,
+        password,
+        role,
+        tenantId,
+    }: UserData) {
         const user = await this.userRepository.findOne({
             where: { email: email },
         });
@@ -23,6 +30,7 @@ export class UserService {
                 email,
                 password: hashedPassword,
                 role: role ?? Roles.MANAGER,
+                tenant: tenantId ? { id: tenantId } : undefined,
             });
             return user;
         } catch {
@@ -46,5 +54,43 @@ export class UserService {
                 id,
             },
         });
+    }
+    async getAll() {
+        return await this.userRepository.find();
+    }
+    async updateUser(id: number, data: UserData) {
+        const user = await this.userRepository.findOne({
+            where: {
+                id,
+            },
+        });
+        if (!user) {
+            throw createHttpError(404, 'User not found');
+        }
+
+        user.firstname = data.firstname;
+        user.lastname = data.lastname;
+        user.email = data.email;
+        user.role = data.role;
+        if (data.password) {
+            user.password = await bcrypt.hash(data.password, 10);
+        }
+
+        const updatedUser = await this.userRepository.save(user);
+        return updatedUser;
+    }
+
+    async deleteUser(id: number) {
+        const user = await this.userRepository.findOne({
+            where: {
+                id,
+            },
+        });
+
+        if (!user) {
+            throw createHttpError(404, 'User not found');
+        }
+
+        await this.userRepository.remove(user);
     }
 }

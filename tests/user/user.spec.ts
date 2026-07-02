@@ -10,6 +10,8 @@ import { isJwt } from '../utils';
 import { accessSync } from 'node:fs';
 import { User } from '../../src/entities/User';
 import { Roles } from '../../src/constants';
+import { Tenant } from '../../src/entities/tenents';
+import { createTenant } from '../../src/types';
 
 describe('GET/auth/self', () => {
     let connection: DataSource;
@@ -45,12 +47,14 @@ describe('GET/auth/self', () => {
                 sub: '1',
                 role: Roles.ADMIN,
             });
+
+            const tenant = await createTenant(connection.getRepository(Tenant));
             const userData = {
                 firstname: 'Riya',
                 lastname: 'Thakor',
                 email: 'riya024@gmail.com',
                 password: 'secret123',
-                tenantId: 1,
+                tenantId: tenant.id,
             };
 
             const response = await request(app)
