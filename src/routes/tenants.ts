@@ -30,12 +30,8 @@ router.get(
     (req: Request, res: Response, next: NextFunction) =>
         createTenantController().getAll(req, res, next),
 );
-router.get(
-    '/self',
-    authenticate,
-    canAccess([Roles.ADMIN]),
-    (req: Request, res: Response) =>
-        createTenantController().self(req as unknown as TenantRequest, res),
+router.get('/self', canAccess([Roles.ADMIN]), (req: Request, res: Response) =>
+    createTenantController().self(req as unknown as TenantRequest, res),
 );
 router.put(
     '/:id',
