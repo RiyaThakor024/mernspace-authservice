@@ -74,12 +74,14 @@ describe('GET/auth/self', () => {
                 sub: '1',
                 role: Roles.ADMIN,
             });
+            const tenant = await createTenant(connection.getRepository(Tenant));
+
             const userData = {
                 firstname: 'Riya',
                 lastname: 'Thakor',
                 email: 'riya024@gmail.com',
                 password: 'secret123',
-                tenantId: 1,
+                tenantId: tenant.id,
             };
 
             const response = await request(app)

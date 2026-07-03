@@ -28,8 +28,7 @@ export default checkSchema({
     },
 
     role: {
-        errorMessage: 'role is required',
-        notEmpty: true,
+        optional: true,
         isIn: {
             options: [[Roles.MANAGER]],
             errorMessage: 'role is invalid',

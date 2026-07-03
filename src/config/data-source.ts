@@ -14,9 +14,12 @@ export const AppDataSource = new DataSource({
     entities: ['src/entities/*.{ts,js}'],
     migrations: ['src/migration/*.{ts,js}'],
     subscribers: [],
-    extra: {
-        ssl: {
-            rejectUnauthorized: false,
-        },
-    },
+    extra:
+        Config.NODE_ENV === 'test'
+            ? {}
+            : {
+                  ssl: {
+                      rejectUnauthorized: false,
+                  },
+              },
 });
