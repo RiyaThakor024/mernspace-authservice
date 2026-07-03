@@ -17,11 +17,9 @@
         "prepare": "husky",
         "lint-staged": "lint-staged",
         "typeorm": "typeorm-ts-node-commonjs",
-        "migration:generate":"typeorm-ts-node-commonjs migration:generate",
-        "migration:run":"typeorm-ts-node-commonjs migration:run",
-        "migration:create":"typeorm-ts-node-commonjs migration:create"
-
-
+        "migration:generate": "typeorm-ts-node-commonjs migration:generate",
+        "migration:run": "typeorm-ts-node-commonjs migration:run",
+        "migration:create": "typeorm-ts-node-commonjs migration:create"
     },
     "repository": {
         "type": "git",
@@ -75,7 +73,7 @@
         "http-errors": "^2.0.1",
         "jsonwebtoken": "^9.0.3",
         "jwks-rsa": "^3.1.0",
-        "pg": "^8.21.0",
+        "pg": "^8.22.0",
         "pino": "^10.3.1",
         "reflect-metadata": "^0.2.2",
         "rsa-pem-to-jwk": "^1.1.3",
