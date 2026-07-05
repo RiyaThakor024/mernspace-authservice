@@ -44,7 +44,6 @@ export class TokenService {
             userId: user.id,
             expiresAt: new Date(Date.now() + MS_IN_YEAR),
         });
-        console.log('saved token:', newRefreshToken);
 
         return newRefreshToken;
     }

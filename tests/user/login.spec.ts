@@ -123,7 +123,6 @@ describe('POST/auth/login', () => {
                     refreshToken = cookie.split(';')[0].split('=')[1];
                 }
             });
-            console.log(response.headers['set-cookie']);
             expect(accessToken).not.toBeNull();
             expect(refreshToken).not.toBeNull();
 

@@ -115,9 +115,6 @@ export class AuthController {
                 next(error);
                 return;
             }
-            console.log('password:', password);
-            console.log('user:', user);
-            console.log('user.password:', user?.password);
             const passwordMatch = await this.credentialService.comparePassword(
                 password,
                 user.password,
@@ -153,8 +150,6 @@ export class AuthController {
     }
 
     async refresh(req: AuthRequest, res: Response, next: NextFunction) {
-        console.log('REFRESH API HIT');
-        console.log('AUTH:', req.auth);
         const user = await this.userService.findById(Number(req.auth.sub));
         if (!user) {
             const error = createHttpError(

@@ -128,7 +128,6 @@ describe('GET/auth/self', () => {
 
             //Assert
             //check if user id matches  with registered user
-            console.log(response.body);
             expect(response.body.id).toBe(data.id);
             expect(response.body).not.toHaveProperty('password');
         });

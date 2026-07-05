@@ -15,9 +15,6 @@ export default expressjwt({
         return refreshToken;
     },
     async isRevoked(request: Request, token) {
-        //  console.log("VALIDATE REFRESH TOKEN");
-        //  console.log(token?.payload);
-
         const payload = token?.payload as IRefreshTokenPayload | undefined;
         if (!payload?.id || !payload?.sub) {
             return true;

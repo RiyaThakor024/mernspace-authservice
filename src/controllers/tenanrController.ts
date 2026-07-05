@@ -47,9 +47,6 @@ export class TenantController {
     async updateTenant(req: Request, res: Response) {
         const tenantId = req.params.id;
         const tenantData = req.body as ITenant;
-        console.log('Params:', req.params);
-        console.log('Body:', req.body);
-
         const updateTenant = await this.tenantService.update(
             Number(tenantId),
             tenantData,

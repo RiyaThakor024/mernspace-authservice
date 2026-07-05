@@ -11,9 +11,6 @@ export const authenticate = expressjwt({
     }) as GetVerificationKey,
     algorithms: ['RS256'],
     getToken(req: Request) {
-        console.log('cookies =>', req.cookies);
-        console.log('cookies =>', req.headers.authorization);
-
         const authHeader = req.headers.authorization;
         //Bearer fhyjjggdffhyjyhbghtyttdaeddfada
         if (authHeader && authHeader.split(' ')[1] !== 'undefined') {
