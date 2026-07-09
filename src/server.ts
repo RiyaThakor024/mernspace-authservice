@@ -9,7 +9,7 @@ const startServer = async () => {
     try {
         await AppDataSource.initialize();
         await createAdmin();
-        logger.info('database conected successfuly');
+        logger.info('database connected successfuly');
         app.listen(PORT, () => {
             console.log(`Listening on port ${PORT}`);
         });
