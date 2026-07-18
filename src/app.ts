@@ -16,11 +16,13 @@ import userRouter from './routes/user';
 import jwksRouter from './routes/jwks';
 const app = express();
 
-app.use(cors({
-    //todo move the .env file
-    origin:["http://localhost:5174"],
-    credentials:true,
-}))
+app.use(
+    cors({
+        //todo move the .env file
+        origin: ['http://localhost:5174'],
+        credentials: true,
+    }),
+);
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/.well-known', jwksRouter);
