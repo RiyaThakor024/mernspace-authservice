@@ -2,12 +2,14 @@ import { Config } from './config/index';
 import app from './app';
 import { AppDataSource } from './config/data-source';
 import { logger } from './config/logger';
+import { createAdmin } from './utils';
 
 const startServer = async () => {
     const PORT = Config.PORT;
     try {
         await AppDataSource.initialize();
-        logger.info('database conected successfuly');
+        await createAdmin();
+        logger.info('database connected successfuly');
         app.listen(PORT, () => {
             console.log(`Listening on port ${PORT}`);
         });
