@@ -11,9 +11,16 @@ import type { HttpError } from 'http-errors';
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth';
 import tenantRouter from './routes/tenants';
+import cors from 'cors';
 import userRouter from './routes/user';
 import jwksRouter from './routes/jwks';
 const app = express();
+
+app.use(cors({
+    //todo move the .env file
+    origin:["http://localhost:5174"],
+    credentials:true,
+}))
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/.well-known', jwksRouter);
