@@ -33,6 +33,9 @@ export class AuthTokenService {
             maxAge: 1000 * 60 * 60 * 24 * 365,
             httpOnly: true,
         });
-        return newRefreshToken;
+        return {
+            accessToken,
+            refreshToken,
+        };
     }
 }

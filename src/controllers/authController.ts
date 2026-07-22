@@ -128,9 +128,14 @@ export class AuthController {
                 return;
             }
             // this.logger.info({ id: saveUser.id }, 'user has been registered');
-            await this.authTokenService.generateAndSetToken(user, res);
+            const token = await this.authTokenService.generateAndSetToken(
+                user,
+                res,
+            );
             return res.status(200).json({
                 id: user.id,
+                accessToken: token.accessToken,
+                refreshToken: token.refreshToken,
             });
         } catch (error) {
             next(error);

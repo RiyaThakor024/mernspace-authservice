@@ -19,7 +19,7 @@ const app = express();
 app.use(
     cors({
         //todo move the .env file
-        origin: ['http://localhost:5174'],
+        origin: ['http://localhost:5173'],
         credentials: true,
     }),
 );

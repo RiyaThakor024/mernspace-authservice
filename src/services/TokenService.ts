@@ -4,7 +4,7 @@ import { Config } from '../config';
 import { User } from '../entities/User';
 import { RefreshToken } from '../entities/RefreshToken';
 import { Repository } from 'typeorm';
-// import fs from 'fs';
+import fs from 'fs';
 // import { log } from 'console';
 
 export class TokenService {
@@ -16,8 +16,8 @@ export class TokenService {
         }
         let privateKey: string;
         try {
-            // privateKey = fs.readFileSync(Config.PRIVATE_KEY, 'utf8');
-            privateKey = Config.PRIVATE_KEY;
+            privateKey = fs.readFileSync('./certs/private.pem', 'utf8');
+            // privateKey = Config.PRIVATE_KEY;
         } catch {
             const err = createHttpError(500, 'Error while reading private key');
             throw err;
